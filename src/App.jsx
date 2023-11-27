@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import styled from "@emotion/styled"
 import Form from "./components/Form"
 import Result from './components/Result'
+import Spinner from './components/Spinner'
 import ImagenCripto from './assets/imagen-criptos.png'
 
 const Contenedor = styled.div`
@@ -52,6 +53,7 @@ function App() {
     
       const getCoinPrice = async () => {
         setLoading(true)
+        setPrice({})
         // Petición para recuperar el precio
         // const url = `https://min-api.cryptocompare.com/data/price?fsym=${cripto_state}&tsyms=${coins_state}`
         const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cripto_state},ETH&tsyms=${coins_state}`
@@ -76,7 +78,7 @@ function App() {
           <Form 
             set_selectedCoin={set_selectedCoin}
           />
-          {loading && <p>Cargando...</p>}          
+          {loading && <Spinner/>}          
           {price.PRICE && <Result result={price}/>}
         </div>
       </Contenedor>
