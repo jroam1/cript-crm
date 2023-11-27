@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import styled from "@emotion/styled"
 import Form from "./components/Form"
+import Result from './components/Result'
 import ImagenCripto from './assets/imagen-criptos.png'
 
 const Contenedor = styled.div`
@@ -43,17 +44,21 @@ const Imagen = styled.img`
 function App() {
   const [ coin_selected, set_selectedCoin ] = useState({})
   const [ price, setPrice ] = useState({})
+  const [ loading, setLoading ] = useState(false)
+
   useEffect(()=>{
     if (Object.keys(coin_selected).length > 0){
       const {coins_state, cripto_state} = coin_selected
     
       const getCoinPrice = async () => {
+        setLoading(true)
         // Petición para recuperar el precio
         // const url = `https://min-api.cryptocompare.com/data/price?fsym=${cripto_state}&tsyms=${coins_state}`
         const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cripto_state},ETH&tsyms=${coins_state}`
         const response = await fetch(url)
         const response_price = await response.json()
         setPrice(response_price.DISPLAY[cripto_state][coins_state])
+        setLoading(false)
       }
       getCoinPrice()
     }
@@ -71,6 +76,8 @@ function App() {
           <Form 
             set_selectedCoin={set_selectedCoin}
           />
+          {loading && <p>Cargando...</p>}          
+          {price.PRICE && <Result result={price}/>}
         </div>
       </Contenedor>
     </>
